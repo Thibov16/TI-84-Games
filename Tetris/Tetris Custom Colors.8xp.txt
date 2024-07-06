@@ -1,0 +1,534 @@
+" Created by Thibov16 - 11/09/2022
+
+" Screen setup
+StorePic 0
+StoreGDB 0
+PlotsOff 
+FnOff 
+ZStandard
+AxesOff
+GridLine DARKGRAY
+BackgroundOn BLACK
+
+0→Xmin
+20*1→Xmax
+10*(­1)→Ymin
+0→Ymax
+
+19→⌊TTRIS(1)
+If dim(⌊TTRIS)<5
+{19,5,1,18,0}→⌊TTRIS
+
+Lbl 1
+Menu("Tetris","Last sco"+"re: "+toString(⌊TTRIS(5)),1,"Play",2,"Change colo"+"r",4,"Info/Help",3,"Exit",0)
+
+Lbl 3
+ClrHome
+
+Output(1,1,"Turn your calculato"+"r -90°")
+Output(2,1,"to play the game.")
+Output(4,1,"    Use the side arrows")
+Output(5,1,"      to move.")
+Output(7,1,"     And use the up arrow")
+Output(8,1,"      to rotate.")
+Output(10,1,"Created by Thibov16")
+
+Pause 
+ClrHome
+Goto 1
+
+Lbl 4
+ClrDraw
+DispGraph
+
+Pt-On(2.5,­4.5,2,LTGRAY)
+Pt-On(2.5,­5.5,2,LTGRAY)
+Pt-On(3.5,­3.5,2,LTGRAY)
+Pt-On(3.5,­4.5,2,LTGRAY)
+Pt-On(3.5,­5.5,2,LTGRAY)
+Pt-On(3.5,­6.5,2,LTGRAY)
+
+Pt-On(17.5,­4.5,2,LTGRAY)
+Pt-On(17.5,­5.5,2,LTGRAY)
+Pt-On(16.5,­3.5,2,LTGRAY)
+Pt-On(16.5,­4.5,2,LTGRAY)
+Pt-On(16.5,­5.5,2,LTGRAY)
+Pt-On(16.5,­6.5,2,LTGRAY)
+
+TextColor(BLACK)
+
+getKey→K
+While K≠105
+getKey→K
+Text(0,0,toString(⌊TTRIS(4)))
+
+If K=24
+Then
+If ⌊TTRIS(4)>10
+Then
+⌊TTRIS(4)-1→⌊TTRIS(4)
+Else
+24→⌊TTRIS(4)
+End
+End
+
+If K=26
+Then
+If ⌊TTRIS(4)<24
+Then
+⌊TTRIS(4)+1→⌊TTRIS(4)
+Else
+10→⌊TTRIS(4)
+End
+End
+
+" Draw tetromino's
+Pt-On(7.5,­2.5,2,⌊TTRIS(4))
+Pt-On(7.5,­3.5,2,⌊TTRIS(4))
+Pt-On(6.5,­3.5,2,⌊TTRIS(4))
+Pt-On(6.5,­2.5,2,⌊TTRIS(4))
+
+Pt-On(7.5,­6.5,2,⌊TTRIS(4))
+Pt-On(6.5,­5.5,2,⌊TTRIS(4))
+Pt-On(7.5,­5.5,2,⌊TTRIS(4))
+Pt-On(8.5,­5.5,2,⌊TTRIS(4))
+
+Pt-On(11.5,­4.5,2,⌊TTRIS(4))
+Pt-On(11.5,­5.5,2,⌊TTRIS(4))
+Pt-On(10.5,­5.5,2,⌊TTRIS(4))
+Pt-On(10.5,­6.5,2,⌊TTRIS(4))
+
+Pt-On(9.5,­2.5,2,⌊TTRIS(4))
+Pt-On(9.5,­3.5,2,⌊TTRIS(4))
+Pt-On(10.5,­2.5,2,⌊TTRIS(4))
+Pt-On(11.5,­2.5,2,⌊TTRIS(4))
+
+Pt-On(13.5,­2.5,2,⌊TTRIS(4))
+Pt-On(13.5,­3.5,2,⌊TTRIS(4))
+Pt-On(13.5,­4.5,2,⌊TTRIS(4))
+Pt-On(13.5,­5.5,2,⌊TTRIS(4))
+
+End
+
+Goto 1
+
+Lbl 2
+ClrDraw
+" gameField matrix
+DelVar [J]
+{20,10}→dim([J])
+" tetrominoY tetrominoX tetrominoRotation tetrominoColor score lineCleared
+{19,5,1,⌊TTRIS(4),0}→⌊TTRIS
+" Set tetromino matrix  and  X position
+randInt(1,7)→J
+If J=1
+Then
+4→⌊TTRIS(2)
+[[1,1,1,1]]→[I]
+End
+If J=2
+Then
+4→⌊TTRIS(2)
+[[1,0,0][1,1,1]]→[I]
+End
+If J=3
+Then
+4→⌊TTRIS(2)
+[[0,0,1][1,1,1]]→[I]
+End
+If J=4
+Then
+5→⌊TTRIS(2)
+[[1,1][1,1]]→[I]
+End
+If J=5
+Then
+5→⌊TTRIS(2)
+[[0,1,1][1,1,0]]→[I]
+End
+If J=6
+Then
+5→⌊TTRIS(2)
+[[0,1,0][1,1,1]]→[I]
+End
+If J=7
+Then
+5→⌊TTRIS(2)
+[[1,1,0][0,1,1]]→[I]
+End
+getKey→K
+
+" Main loop
+While K≠105
+getKey→K
+
+augment(dim([I]),{0,0})→⌊TMP
+⌊TTRIS→⌊TTRI2
+[I]→[G]
+
+" Rotate tetromino
+If K=26
+Then
+DelVar [G]
+{⌊TMP(2),⌊TMP(1)}→dim([G])
+
+For(I,1,⌊TMP(1))
+For(J,1,⌊TMP(2))
+[I](I,J)→[G](J,⌊TMP(1)-I+1)
+End
+End
+
+augment(dim([G]),{⌊TMP(3),⌊TMP(4),⌊TMP(1),⌊TMP(2)})→⌊TMP
+
+If ⌊TTRIS(3)=5
+1→⌊TTRIS(3)
+
+If ⌊TTRIS(3)≤2
+⌊TTRIS(2)+(⌊TMP(6)-⌊TMP(2))→⌊TTRIS(2)
+
+If ⌊TTRIS(3)≥2 and ⌊TTRIS(3)≠4
+⌊TTRIS(1)+(⌊TMP(5)-⌊TMP(1))→⌊TTRIS(1)
+
+" Rotate extra if I tetromino
+If ⌊TMP(1)=4 or ⌊TMP(2)=4
+Then
+If ⌊TTRIS(3)=1 or ⌊TTRIS(3)=3
+Then
+⌊TTRIS(2)+⌊TTRIS(3)-2→⌊TTRIS(2)
+⌊TTRIS(1)+⌊TTRIS(3)-2→⌊TTRIS(1)
+End
+If ⌊TTRIS(3)=2 or ⌊TTRIS(3)=4
+Then
+⌊TTRIS(2)-(⌊TTRIS(3)-3)→⌊TTRIS(2)
+⌊TTRIS(1)+⌊TTRIS(3)-3→⌊TTRIS(1)
+End
+End
+
+⌊TTRIS(3)+1→⌊TTRIS(3)
+
+" Check if tetromino is not overlapping
+For(I,1,⌊TMP(1))
+For(J,1,⌊TMP(2))
+If ⌊TTRIS(2)≤1 or ⌊TTRIS(2)≥11-⌊TMP(2) or ⌊TTRIS(1)≤1 or ⌊TTRIS(1)≥21-⌊TMP(1) or ([G](I,J)=1 and [J](⌊TTRIS(1)+I-1,⌊TTRIS(2)+J-1)=1)
+1→⌊TMP(3)
+End
+End
+
+If ⌊TMP(3)=0
+Then
+[I]→[H]
+[G]→[I]
+[H]→[G]
+DelVar [H]
+Else
+⌊TTRI2→⌊TTRIS
+augment(dim([I]),{0,⌊TMP(4)})→⌊TMP
+[I]→[G]
+End
+
+End
+
+" Move tetromino left
+If K=25 and ⌊TTRIS(2)>1
+Then
+For(I,1,⌊TMP(1))
+For(J,1,⌊TMP(2))
+If [I](I,J)=1 and [J](⌊TTRIS(1)+I-1,⌊TTRIS(2)+J-2)=1
+Then
+1→⌊TMP(3)
+⌊TMP(1)→I
+1→J
+End
+End
+End
+If ⌊TMP(3)=0
+⌊TTRIS(2)-1→⌊TTRIS(2)
+Else
+
+" Move tetromino right
+If K=34 and ⌊TTRIS(2)<11-⌊TMP(2)
+Then
+For(I,1,⌊TMP(1))
+For(J,⌊TMP(2),1,­1)
+If [I](I,J)=1 and [J](⌊TTRIS(1)+I-1,⌊TTRIS(2)+J-1)=1
+Then
+1→⌊TMP(3)
+⌊TMP(1)→I
+1→J
+End
+End
+End
+If ⌊TMP(3)=0
+⌊TTRIS(2)+1→⌊TTRIS(2)
+End
+End
+
+" Move tetromino down if possible otherwise next tetromino
+If ⌊TTRIS(1)≤1
+Then
+" --Set new tetromino
+" --Draw tetromino
+" Remove tetromino
+augment({⌊TMP(1),⌊TMP(2),⌊TMP(3),⌊TMP(4)},dim([G]))→⌊TMP
+For(J,1,⌊TMP(5))
+For(L,1,⌊TMP(6))
+If [G](J,L)=1
+Pt-Off(⌊TTRI2(1)+J-1.5,­(⌊TTRI2(2)+L-1.5),2)
+End
+End
+
+" Draw tetromino
+For(J,1,⌊TMP(1))
+For(L,1,⌊TMP(2))
+If [I](J,L)=1
+Pt-On(⌊TTRIS(1)+J-1.5,­(⌊TTRIS(2)+L-1.5),2,⌊TTRIS(4))
+End
+End
+" --End Draw tetromino
+
+" Add to game matrix
+For(J,1,⌊TMP(1))
+For(L,1,⌊TMP(2))
+If [I](J,L)=1
+1→[J](⌊TTRIS(1)+J-1,⌊TTRIS(2)+L-1)
+End
+End
+
+" Check full row
+0→⌊TTRIS(6)
+[J]→[H]
+For(J,0,⌊TMP(1)-1)
+For(L,1,10)
+If [J](⌊TTRIS(1)+J,L)=0
+Then
+10→L
+Else
+If L=10
+Then
+1→⌊TMP(4)
+*row(0,[J],⌊TTRIS(1)+J)→[J]
+For(M,⌊TTRIS(1)+J,19)
+rowSwap([J],M,M+1)→[J]
+End
+J-1→J
+" Add line cleared
+⌊TTRIS(6)+1→⌊TTRIS(6)
+End
+
+End
+End
+End
+
+" Add points to the score
+⌊TTRIS(5)+100*⌊TTRIS(6)*2-100*(⌊TTRIS(6)>0 and ⌊TTRIS(6)<4)→⌊TTRIS(5)
+
+" Set new tetromino
+randInt(1,7)→J
+If J=1
+Then
+4→⌊TTRIS(2)
+[[1,1,1,1]]→[I]
+End
+If J=2
+Then
+4→⌊TTRIS(2)
+[[1,0,0][1,1,1]]→[I]
+End
+If J=3
+Then
+4→⌊TTRIS(2)
+[[0,0,1][1,1,1]]→[I]
+End
+If J=4
+Then
+5→⌊TTRIS(2)
+[[1,1][1,1]]→[I]
+End
+If J=5
+Then
+5→⌊TTRIS(2)
+[[0,1,1][1,1,0]]→[I]
+End
+If J=6
+Then
+5→⌊TTRIS(2)
+[[0,1,0][1,1,1]]→[I]
+End
+If J=7
+Then
+5→⌊TTRIS(2)
+[[1,1,0][0,1,1]]→[I]
+End
+19→⌊TTRIS(1)
+1→⌊TTRIS(3)
+
+augment(dim([I]),{⌊TMP(3),⌊TMP(4)})→⌊TMP
+⌊TTRIS→⌊TTRI2
+" --End new tetromino
+Else
+
+" Check if tetromino is under this tetromino
+For(I,1,⌊TMP(2))
+For(N,1,⌊TMP(1))
+If [I](N,I)=1 and [J](⌊TTRIS(1)+N-2,⌊TTRIS(2)+I-1)=1
+Then
+⌊TMP(1)→N
+⌊TMP(2)→I
+" Check if tetromino is just placed  and  then quit
+If ⌊TTRIS(1)≥18
+105→K
+
+" --Set new tetromino
+" --Draw tetromino
+" Remove tetromino
+augment({⌊TMP(1),⌊TMP(2),⌊TMP(3),⌊TMP(4)},dim([G]))→⌊TMP
+For(J,1,⌊TMP(5))
+For(L,1,⌊TMP(6))
+If [G](J,L)=1
+Pt-Off(⌊TTRI2(1)+J-1.5,­(⌊TTRI2(2)+L-1.5),2)
+End
+End
+
+" Draw tetromino
+For(J,1,⌊TMP(1))
+For(L,1,⌊TMP(2))
+If [I](J,L)=1
+Pt-On(⌊TTRIS(1)+J-1.5,­(⌊TTRIS(2)+L-1.5),2,⌊TTRIS(4))
+End
+End
+" --End Draw tetromino
+
+" Add to game matrix
+For(J,1,⌊TMP(1))
+For(L,1,⌊TMP(2))
+If [I](J,L)=1
+1→[J](⌊TTRIS(1)+J-1,⌊TTRIS(2)+L-1)
+End
+End
+
+" Check full row
+0→⌊TTRIS(6)
+[J]→[H]
+For(J,0,⌊TMP(1)-1)
+For(L,1,10)
+If [J](⌊TTRIS(1)+J,L)=0
+Then
+10→L
+Else
+If L=10
+Then
+1→⌊TMP(4)
+*row(0,[J],⌊TTRIS(1)+J)→[J]
+For(M,⌊TTRIS(1)+J,19)
+rowSwap([J],M,M+1)→[J]
+End
+J-1→J
+" Add line cleared
+⌊TTRIS(6)+1→⌊TTRIS(6)
+End
+
+End
+End
+End
+
+" Add points to the score
+⌊TTRIS(5)+100*⌊TTRIS(6)*2-100*(⌊TTRIS(6)>0 and ⌊TTRIS(6)<4)→⌊TTRIS(5)
+
+" Set new tetromino
+randInt(1,7)→J
+If J=1
+Then
+4→⌊TTRIS(2)
+[[1,1,1,1]]→[I]
+End
+If J=2
+Then
+4→⌊TTRIS(2)
+[[1,0,0][1,1,1]]→[I]
+End
+If J=3
+Then
+4→⌊TTRIS(2)
+[[0,0,1][1,1,1]]→[I]
+End
+If J=4
+Then
+5→⌊TTRIS(2)
+[[1,1][1,1]]→[I]
+End
+If J=5
+Then
+5→⌊TTRIS(2)
+[[0,1,1][1,1,0]]→[I]
+End
+If J=6
+Then
+5→⌊TTRIS(2)
+[[0,1,0][1,1,1]]→[I]
+End
+If J=7
+Then
+5→⌊TTRIS(2)
+[[1,1,0][0,1,1]]→[I]
+End
+19→⌊TTRIS(1)
+1→⌊TTRIS(3)
+
+augment(dim([I]),{⌊TMP(3),⌊TMP(4)})→⌊TMP
+⌊TTRIS→⌊TTRI2
+" --End new tetromino
+End
+End
+End
+
+⌊TTRIS(1)-1→⌊TTRIS(1)
+End
+
+" Redraw placed tetrominos
+If ⌊TMP(4)=1
+Then
+For(I,1,20)
+For(J,1,10)
+If [H](I,J)≠[J](I,J) and [J](I,J)=1
+Pt-On(I-0.5,­(J-0.5),2,⌊TTRIS(4))
+If [H](I,J)≠[J](I,J) and [J](I,J)=0
+Pt-Off(I-0.5,­(J-0.5),2)
+End
+End
+
+End
+
+" --Draw tetromino
+" Remove tetromino
+augment({⌊TMP(1),⌊TMP(2)},dim([G]))→⌊TMP
+For(I,1,⌊TMP(3))
+For(J,1,⌊TMP(4))
+If [G](I,J)=1
+Pt-Off(⌊TTRI2(1)+I-1.5,­(⌊TTRI2(2)+J-1.5),2)
+End
+End
+
+" Draw tetromino
+For(I,1,⌊TMP(1))
+For(J,1,⌊TMP(2))
+If [I](I,J)=1
+Pt-On(⌊TTRIS(1)+I-1.5,­(⌊TTRIS(2)+J-1.5),2,⌊TTRIS(4))
+End
+End
+" --End Draw tetromino
+
+DelVar [H]
+End
+Goto 1
+
+Lbl 0
+BackgroundOn WHITE
+RecallPic 0
+RecallGDB 0
+
+
+DelVar [G]
+DelVar ⌊TMP
+
+ClrHome
+Disp "Your sco"+"re was "+toString(⌊TTRIS(5))

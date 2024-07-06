@@ -1,0 +1,104 @@
+" Created by Thibov16 - 17/09/2020
+
+StorePic 0
+StoreGDB 0
+
+DispGraph
+ClrDraw
+BackgroundOn 0
+FnOff 
+GridOff
+PlotsOff 
+AxesOff
+ZStandard
+ZSquare
+TextColor(12)
+
+Text(150,40,"start")
+Text(150,188,"exit")
+Text(1,103,"Thibov16")
+
+getKey→K
+While K≠14
+getKey→K
+
+If K=12
+Then
+
+ClrDraw
+BackgroundOn 22
+
+5→Z
+0→S
+getKey→K
+{17,randInt(­2,5),28,randInt(­2,5),39,randInt(­2,5)→⌊F
+
+While K≠74
+getKey→K
+If K=103
+Z+1→Z
+
+For(I,1,dim(⌊F),2)
+If ⌊F(I)<­16
+Then
+If I=1
+Then
+
+⌊F(5)+randInt(12,14)+abs(⌊F(6))→⌊F(I)
+
+Else
+
+⌊F(I-2)+randInt(12,14)+abs(⌊F(I-1))→⌊F(I)
+
+End
+randInt(­5,9)→⌊F(I+1)
+End
+End
+
+For(I,1,dim(⌊F),2)
+If ⌊F(I)=­10
+Then
+If Z<⌊F(I+1) and Z>(⌊F(I+1)-4)
+Then
+S+1→S
+Else
+74→K
+End
+End
+End
+
+If Z>10 or Z<­10
+74→K
+
+ClrDraw
+For(I,1,dim(⌊F),2)
+Line(⌊F(I),10,⌊F(I),⌊F(I+1),14)
+Line(⌊F(I),­10,⌊F(I),⌊F(I+1)-4,14)
+End
+
+Pt-On(­10,Z,1,19)
+Pt-On(­10.4,Z,1,19)
+Text(0,0,toString(S))
+
+Z-0.5→Z
+For(I,1,dim(⌊F),2)
+⌊F(I)-1→⌊F(I)
+End
+End
+
+ClrDraw
+BackgroundOn 0
+Text(150,40,"start")
+Text(150,188,"exit")
+Text(0,100,"sco"+"re: ",toString(S))
+
+
+End
+
+End
+
+ClrDraw
+BackgroundOff
+RecallPic 0
+StoreGDB 0
+ClrHome

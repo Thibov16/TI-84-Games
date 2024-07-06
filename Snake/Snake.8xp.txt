@@ -1,0 +1,170 @@
+" Created by Thibov16 - 29/05/2021
+
+" Setup
+{0,0,0,0,0,0,0,0,0}→⌊SNAKE
+
+Lbl 1
+" Menu
+Menu("Snake","Length: "+toString(⌊SNAKE(5)),1,"Start game",2,"Help",3,"Info",4,"Exit",0)
+
+" Start the game
+Lbl 2
+" Setup graph
+StorePic 0
+StoreGDB 0
+ClrDraw
+
+CoordOff
+GridOff
+AxesOff
+LabelOff
+ExprOff
+FnOff 
+PlotsOff 
+
+­0.5→Xmin
+29.5→Xmax
+0.5→Ymin
+20→Ymax
+
+TextColor(BLACK)
+BackgroundOn LTBLUE
+DispGraph
+
+" Setup game
+" longest_length appleX appleY direction length snakeX... snakeY...
+{⌊SNAKE(1),0,0,0,2,0,0,0,0}→⌊SNAKE
+
+" Draw first apple
+randInt(0,29)→⌊SNAKE(2)
+randInt(1,19)→⌊SNAKE(3)
+
+" Start game
+getKey→K
+While K≠105
+" Check movement
+If K=25 and ⌊SNAKE(4)≠2
+0→⌊SNAKE(4)
+If K=34 and ⌊SNAKE(4)≠0
+2→⌊SNAKE(4)
+If K=24 and ⌊SNAKE(4)≠1
+3→⌊SNAKE(4)
+If K=26 and ⌊SNAKE(4)≠3
+1→⌊SNAKE(4)
+
+" Add head pixel
+If ⌊SNAKE(4)=0
+Then
+⌊SNAKE(dim(⌊SNAKE)-1)+0→⌊SNAKE(dim(⌊SNAKE)+1)
+⌊SNAKE(dim(⌊SNAKE)-1)+1→⌊SNAKE(dim(⌊SNAKE)+1)
+End
+If ⌊SNAKE(4)=1
+Then
+⌊SNAKE(dim(⌊SNAKE)-1)+1→⌊SNAKE(dim(⌊SNAKE)+1)
+⌊SNAKE(dim(⌊SNAKE)-1)+0→⌊SNAKE(dim(⌊SNAKE)+1)
+End
+If ⌊SNAKE(4)=2
+Then
+⌊SNAKE(dim(⌊SNAKE)-1)+0→⌊SNAKE(dim(⌊SNAKE)+1)
+⌊SNAKE(dim(⌊SNAKE)-1)-1→⌊SNAKE(dim(⌊SNAKE)+1)
+End
+If ⌊SNAKE(4)=3
+Then
+⌊SNAKE(dim(⌊SNAKE)-1)-1→⌊SNAKE(dim(⌊SNAKE)+1)
+⌊SNAKE(dim(⌊SNAKE)-1)+0→⌊SNAKE(dim(⌊SNAKE)+1)
+End
+
+" Check if crash in wall
+If ⌊SNAKE(4)=0 and ⌊SNAKE(dim(⌊SNAKE))≥20
+Goto 5
+If ⌊SNAKE(4)=1 and ⌊SNAKE(dim(⌊SNAKE)-1)≥30
+Goto 5
+If ⌊SNAKE(4)=2 and ⌊SNAKE(dim(⌊SNAKE))≤0
+Goto 5
+If ⌊SNAKE(4)=3 and ⌊SNAKE(dim(⌊SNAKE)-1)<0
+Goto 5
+
+" Check item in front
+If pxl-Test(int(164-⌊SNAKE(dim(⌊SNAKE))*8.2)+2,int(⌊SNAKE(dim(⌊SNAKE)-1)*8.8)+2)=1
+Then
+If ⌊SNAKE(2)=⌊SNAKE(dim(⌊SNAKE)-1) and ⌊SNAKE(3)=⌊SNAKE(dim(⌊SNAKE))
+Then
+" Set new apple
+randInt(0,29)→⌊SNAKE(2)
+randInt(1,19)→⌊SNAKE(3)
+
+" Add length
+seq(⌊SNAKE(X-(X≥8)-(X≥8)),X,1,dim(⌊SNAKE)+2)→⌊SNAKE
+⌊SNAKE(5)+1→⌊SNAKE(5)
+Else
+" Crash in itself
+Goto 5
+End
+End
+
+" Draw head pixel
+Pt-On(⌊SNAKE(dim(⌊SNAKE)-1),⌊SNAKE(dim(⌊SNAKE)),2,GREEN)
+
+" Undraw last pixel
+Pt-Off(⌊SNAKE(6),⌊SNAKE(7),2)
+
+" Remove last pixel
+seq(⌊SNAKE(X+(X≥6)),X,1,dim(⌊SNAKE)-1)→⌊SNAKE
+seq(⌊SNAKE(X+(X≥6)),X,1,dim(⌊SNAKE)-1)→⌊SNAKE
+
+" Draw apple
+Pt-On(⌊SNAKE(2),⌊SNAKE(3),2,RED)
+
+" Get key
+getKey→K
+End
+
+" Reset
+Lbl 5
+RecallPic 0
+RecallGDB 0
+
+" Check length
+If ⌊SNAKE(5)>⌊SNAKE(1)
+⌊SNAKE(5)→⌊SNAKE(1)
+
+Goto 1
+
+" Show help
+Lbl 3
+ClrHome
+Output(1,1,"Snake - Help")
+
+Output(3,1,"        You can use")
+Output(4,1,"   #   the arrow keys")
+Output(5,1,"        to move")
+
+Output(7,1," +-----+ And you can")
+Output(8,1," |Enter| use the Enter ")
+Output(9,1," +-----+ key to stop ")
+
+Pause 
+ClrHome
+Goto 1
+
+" Show game info
+Lbl 4
+ClrHome
+Output(1,1,"Snake - Info")
+
+Output(3,1,"+--------------+")
+Output(4,1,"|    ***** @   |")
+Output(5,1,"|  ***         |")
+Output(6,1,"|              |")
+Output(7,1,"+--------------+")
+
+Output(9,1,"Created by Thibov16")
+Output(10,1,"170 lines o"+"f code")
+
+Pause 
+ClrHome
+Goto 1
+
+" End
+Lbl 0
+Disp "Longest length: "+toString(⌊SNAKE(1))

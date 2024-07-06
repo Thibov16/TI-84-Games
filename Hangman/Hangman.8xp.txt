@@ -1,0 +1,411 @@
+" Created by Thibov16 - 22/05/2021
+
+Lbl 1
+" Setup
+{41,42,43,51,52,53,54,55,61,62,63,64,65,71,72,73,74,75,81,82,83,84,85,91,92,93}→⌊ALEFT
+{0,0,0}→⌊AHMDA
+
+" Menu
+Menu("Hangman","Set wo"+"rd",2,"Ran"+"dom wo"+"rd",3,"Start game",4,"Info",6,"Exit",0)
+
+" Let user set a word
+Lbl 2
+ClrHome
+Output(1,1,"Enter a wo"+"rd fo"+"r the game")
+Output(2,1,"Max 8 characters.")
+Output(10,1,"Press enter when ready")
+
+ClrList ⌊AWORD
+" Loop for the 8 characters
+For(I,1,8)
+0→K
+
+" Empty space
+Output(6,I*2,"_")
+
+" Wair for character
+While K=0
+getKey→K
+
+If K=105
+8→I
+
+" Loop through keys
+For(J,1,dim(⌊ALEFT))
+If ⌊ALEFT(J)=K
+Then
+K→⌊AWORD(I)
+
+" Display the key
+If K=41
+Output(6,I*2,"A")
+If K=42
+Output(6,I*2,"B")
+If K=43
+Output(6,I*2,"C")
+If K=51
+Output(6,I*2,"D")
+If K=52
+Output(6,I*2,"E")
+If K=53
+Output(6,I*2,"F")
+If K=54
+Output(6,I*2,"G")
+If K=55
+Output(6,I*2,"H")
+If K=61
+Output(6,I*2,"I")
+If K=62
+Output(6,I*2,"J")
+If K=63
+Output(6,I*2,"K")
+If K=64
+Output(6,I*2,"L")
+If K=65
+Output(6,I*2,"M")
+If K=71
+Output(6,I*2,"N")
+If K=72
+Output(6,I*2,"O")
+If K=73
+Output(6,I*2,"P")
+If K=74
+Output(6,I*2,"Q")
+If K=75
+Output(6,I*2,"R")
+If K=81
+Output(6,I*2,"S")
+If K=82
+Output(6,I*2,"T")
+If K=83
+Output(6,I*2,"U")
+If K=84
+Output(6,I*2,"V")
+If K=85
+Output(6,I*2,"W")
+If K=91
+Output(6,I*2,"X")
+If K=92
+Output(6,I*2,"Y")
+If K=93
+Output(6,I*2,"Z")
+
+" Pause if it was last char
+If I=8 and K≠105
+Pause 
+
+105→K
+dim(⌊ALEFT)→J
+End
+End
+
+" Check if correct key is pressed
+If K≠105
+0→K
+
+End
+End
+
+ClrHome
+Goto 1
+
+" Set random word
+Lbl 3
+
+randInt(0,2)→I
+If I=0
+{42,75,72,72,51}→⌊AWORD
+If I=1
+{75,41,41,65}→⌊AWORD
+If I=2
+{41,83,82,72}→⌊AWORD
+
+Goto 1
+
+" Start the game
+Lbl 4
+If dim(⌊AWORD)=0
+Goto 1
+
+" Setup graph
+StorePic 0
+StoreGDB 0
+ClrDraw
+
+CoordOff
+GridOff
+AxesOff
+LabelOff
+ExprOff
+FnOff 
+PlotsOff 
+
+­10→Xmin
+10→Xmax
+­5→Ymin
+20→Ymax
+ZSquare
+
+TextColor(BLACK)
+BackgroundOn 9
+DispGraph
+
+" Setup game
+TextColor(BLACK)
+For(I,1,dim(⌊AWORD))
+Text(140,I*30-7,"_")
+End
+
+" Game loop
+For(I,1,dim(⌊ALEFT))
+0→K
+While K=0
+getKey→K
+
+" Check if player stops game
+If K=105
+Goto 1
+
+" Loop through keys
+For(J,1,dim(⌊ALEFT)+1)
+If J=dim(⌊ALEFT)+1
+0→K
+
+If J≤dim(⌊ALEFT)
+Then
+If ⌊ALEFT(J)=K
+dim(⌊ALEFT)+1→J
+End
+End
+
+" Check if we need char
+If K≠0
+Then
+0→⌊AHMDA(1)
+For(J,1,dim(⌊AWORD)+1)
+If J≤dim(⌊AWORD)
+Then
+If ⌊AWORD(J)=K
+Then
+" Right char
+1→⌊AHMDA(1)
+
+" Remove char for if player lost
+0→⌊AWORD(J)
+
+" Display the key
+If K=41
+Text(140,J*30-7,"A")
+If K=42
+Text(140,J*30-7,"B")
+If K=43
+Text(140,J*30-7,"C")
+If K=51
+Text(140,J*30-7,"D")
+If K=52
+Text(140,J*30-7,"E")
+If K=53
+Text(140,J*30-7,"F")
+If K=54
+Text(140,J*30-7,"G")
+If K=55
+Text(140,J*30-7,"H")
+If K=61
+Text(140,J*30-7,"I")
+If K=62
+Text(140,J*30-7,"J")
+If K=63
+Text(140,J*30-7,"K")
+If K=64
+Text(140,J*30-7,"L")
+If K=65
+Text(140,J*30-7,"M")
+If K=71
+Text(140,J*30-7,"N")
+If K=72
+Text(140,J*30-7,"O")
+If K=73
+Text(140,J*30-7,"P")
+If K=74
+Text(140,J*30-7,"Q")
+If K=75
+Text(140,J*30-7,"R")
+If K=81
+Text(140,J*30-7,"S")
+If K=82
+Text(140,J*30-7,"T")
+If K=83
+Text(140,J*30-7,"U")
+If K=84
+Text(140,J*30-7,"V")
+If K=85
+Text(140,J*30-7,"W")
+If K=91
+Text(140,J*30-7,"X")
+If K=92
+Text(140,J*30-7,"Y")
+If K=93
+Text(140,J*30-7,"Z")
+
+" Remove char
+For(L,1,dim(⌊ALEFT))
+If ⌊ALEFT(L)=K
+Then
+seq(⌊ALEFT(X+(X≥L)),X,1,dim(⌊ALEFT)-1)→⌊ALEFT
+dim(⌊ALEFT)+1→L
+End
+End
+⌊AHMDA(3)+1→⌊AHMDA(3)
+
+" Check if you won
+If ⌊AHMDA(3)=dim(⌊AWORD)
+Then
+Text(2,202,"You won!")
+Text(18,182,"Press enter")
+Pause 
+Disp "You won!"
+Goto 5
+End
+
+End
+End
+
+If J=dim(⌊AWORD)+1 and ⌊AHMDA(1)=0
+Then
+" Wrong char
+⌊AHMDA(2)+1→⌊AHMDA(2)
+If ⌊AHMDA(2)=1
+Line(­7,3.8,­7,18,BLACK)
+If ⌊AHMDA(2)=2
+Line(­7,18,0,18,BLACK)
+If ⌊AHMDA(2)=3
+Line(­7,15,­4,18,BLACK)
+If ⌊AHMDA(2)=4
+Line(0,18,0,16,BLACK)
+If ⌊AHMDA(2)=5
+Circle(0,14.5,1.5,BLACK)
+If ⌊AHMDA(2)=6
+Line(0,13,0,8,BLACK)
+If ⌊AHMDA(2)=7
+Line(0,12.5,­2,10,BLACK)
+If ⌊AHMDA(2)=8
+Line(0,12.5,2,10,BLACK)
+If ⌊AHMDA(2)=9
+Line(0,8,­2,5.5,BLACK)
+If ⌊AHMDA(2)=10
+Then
+Line(0,8,2,5.5,BLACK)
+
+For(L,1,dim(⌊AWORD))
+If ⌊AWORD(L)≠0
+Then
+TextColor(RED)
+" Display the key
+If ⌊AWORD(L)=41
+Text(140,L*30-7,"A")
+If ⌊AWORD(L)=42
+Text(140,L*30-7,"B")
+If ⌊AWORD(L)=43
+Text(140,L*30-7,"C")
+If ⌊AWORD(L)=51
+Text(140,L*30-7,"D")
+If ⌊AWORD(L)=52
+Text(140,L*30-7,"E")
+If ⌊AWORD(L)=53
+Text(140,L*30-7,"F")
+If ⌊AWORD(L)=54
+Text(140,L*30-7,"G")
+If ⌊AWORD(L)=55
+Text(140,L*30-7,"H")
+If ⌊AWORD(L)=61
+Text(140,L*30-7,"I")
+If ⌊AWORD(L)=62
+Text(140,L*30-7,"J")
+If ⌊AWORD(L)=63
+Text(140,L*30-7,"K")
+If ⌊AWORD(L)=64
+Text(140,L*30-7,"L")
+If ⌊AWORD(L)=65
+Text(140,L*30-7,"M")
+If ⌊AWORD(L)=71
+Text(140,L*30-7,"N")
+If ⌊AWORD(L)=72
+Text(140,L*30-7,"O")
+If ⌊AWORD(L)=73
+Text(140,L*30-7,"P")
+If ⌊AWORD(L)=74
+Text(140,L*30-7,"Q")
+If ⌊AWORD(L)=75
+Text(140,L*30-7,"R")
+If ⌊AWORD(L)=81
+Text(140,L*30-7,"S")
+If ⌊AWORD(L)=82
+Text(140,L*30-7,"T")
+If ⌊AWORD(L)=83
+Text(140,L*30-7,"U")
+If ⌊AWORD(L)=84
+Text(140,L*30-7,"V")
+If ⌊AWORD(L)=85
+Text(140,L*30-7,"W")
+If ⌊AWORD(L)=91
+Text(140,L*30-7,"X")
+If ⌊AWORD(L)=92
+Text(140,L*30-7,"Y")
+If ⌊AWORD(L)=93
+Text(140,L*30-7,"Z")
+TextColor(BLACK)
+End
+End
+
+Text(2,197,"You lost!")
+Text(18,182,"Press enter")
+Pause 
+Disp "You lost!"
+Goto 5
+End
+
+" Remove char
+For(L,1,dim(⌊ALEFT))
+If ⌊ALEFT(L)=K
+Then
+seq(⌊ALEFT(X+(X≥L)),X,1,dim(⌊ALEFT)-1)→⌊ALEFT
+dim(⌊ALEFT)+1→L
+End
+End
+
+End
+End
+End
+
+End
+End
+
+" End game
+Lbl 5
+ClrList ⌊AWORD
+RecallPic 0
+RecallGDB 0
+Disp "Game finished"
+Goto 0
+
+" Show game info
+Lbl 6
+ClrHome
+Output(1,1,"Hangman")
+
+Output(2,2," o ")
+Output(3,2,"/|\  A B _")
+Output(4,2,"/ \")
+
+Output(6,1,"You can press enter in")
+Output(7,1,"every menu to exit")
+Output(9,1,"Created by Thibov16")
+Output(10,1,"411 lines o"+"f code")
+
+Pause 
+ClrHome
+Goto 1
+
+" Stop the program
+Lbl 0
+Stop
